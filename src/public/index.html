@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TutorTots - Learning Assistant</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --danger: #ef4444;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 24px 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 680px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 28px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.85rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            background: #fff;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* Children Section */
+        .children-section {
+            background: #f1f5f9;
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .children-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .child-card {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .child-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            color: var(--primary);
+        }
+
+        .btn-remove-child {
+            background: transparent;
+            color: var(--danger);
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .btn-remove-child:hover {
+            background: #fee2e2;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 18px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 1rem;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            padding: 6px 12px;
+        }
+        .btn-secondary:hover {
+            background: #cbd5e1;
+        }
+
+        /* Rules section */
+        .rules-box {
+            background: #faf5ff;
+            border: 1px solid #e9d5ff;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        .rules-title {
+            font-weight: 600;
+            color: #7e22ce;
+            margin-bottom: 12px;
+            font-size: 0.92rem;
+        }
+
+        /* Chat Section */
+        #chat-section {
+            display: none;
+        }
+
+        .session-banner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e0e7ff;
+            border: 1px solid #c7d2fe;
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-bottom: 20px;
+            font-size: 0.88rem;
+            color: #312e81;
+        }
+
+        .chat-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        #mic {
+            background: #ef4444;
+            color: white;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        #mic:hover {
+            background: #dc2626;
+        }
+
+        #typed {
+            display: flex;
+            gap: 8px;
+            flex: 1;
+        }
+
+        #typed input {
+            flex: 1;
+        }
+
+        #typed button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0 18px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        #typed button:hover {
+            background: var(--primary-hover);
+        }
+
+        .heard-box {
+            background: #f1f5f9;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 14px;
+            color: var(--text-muted);
+        }
+        .heard-box strong {
+            color: var(--text-main);
+        }
+
+        #out {
+            font-size: 1.25rem;
+            line-height: 1.5;
+            color: #0f172a;
+            padding: 16px;
+            background: #f8fafc;
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+            margin-bottom: 16px;
+            min-height: 60px;
+        }
+
+        #options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .option-btn {
+            background: #ffffff;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            font-size: 1.1rem;
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.15s;
+        }
+        .option-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 1. Household Setup Form Section -->
+        <section id="setup-section" class="card">
+            <h1>🎒 TutorTots Setup</h1>
+            <p class="subtitle">Complete your household profile before starting learning sessions.</p>
+
+            <form id="household-form">
+                <div class="row">
+                    <div class="form-group">
+                        <label for="household_id">Household ID</label>
+                        <input type="text" id="household_id" name="household_id" placeholder="e.g. home1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="language">Language</label>
+                        <input type="text" id="language" name="language" placeholder="e.g. English" required>
+                    </div>
+                </div>
+
+                <!-- Children List -->
+                <div class="children-section">
+                    <div class="children-header">
+                        <label style="margin: 0; font-size: 1rem;">Children</label>
+                        <button type="button" id="btn-add-child" class="btn btn-secondary">+ Add Child</button>
+                    </div>
+                    <div id="children-container"></div>
+                </div>
+
+                <!-- Reading Level Note -->
+                <div class="form-group">
+                    <label for="reading_level_note">Reading Level Notes</label>
+                    <textarea id="reading_level_note" name="reading_level_note" placeholder="Provide notes on reading level and instructions for pacing..."></textarea>
+                    <div class="hint">Guides how simple or challenging the explanations and sentence structures should be.</div>
+                </div>
+
+                <!-- Rules -->
+                <div class="rules-box">
+                    <div class="rules-title">⚙️ Learning Rules</div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="session_minutes">Session Time (Minutes)</label>
+                            <input type="number" id="session_minutes" name="session_minutes" min="1" max="120" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="quiz_questions">Quiz Questions</label>
+                            <input type="number" id="quiz_questions" name="quiz_questions" min="1" max="20" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="avoid_topics">Avoid Topics (Comma-separated)</label>
+                        <input type="text" id="avoid_topics" name="avoid_topics" placeholder="violence, scary content">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Save & Start Learning 🚀</button>
+            </form>
+        </section>
+
+        <!-- 2. Chat / Prompt Interface Section (Initially Hidden) -->
+        <section id="chat-section" class="card">
+            <div class="session-banner">
+                <div>
+                    <strong id="banner-household-id">home1</strong> &bull;
+                    <span id="banner-children">Chidi, Amaka</span> &bull;
+                    <span id="banner-language">English</span>
+                </div>
+                <button type="button" id="btn-edit-setup" class="btn btn-secondary" style="font-size:0.75rem; padding:4px 8px;">⚙️ Edit Profile</button>
+            </div>
+
+            <h1>TutorTots Voice & Chat</h1>
+            <p class="subtitle">Ask to start a lesson or ask questions!</p>
+
+            <div class="chat-controls">
+                <button id="mic" type="button">🎙️ Talk</button>
+                <form id="typed">
+                    <input id="box" placeholder="or type here (e.g. Chidi wants to learn about dinosaurs)">
+                    <button type="submit">Send</button>
+                </form>
+            </div>
+
+            <div class="heard-box">You said: <strong id="heard">-</strong></div>
+            <p id="out">Ready! Tap Talk or type a prompt above to begin.</p>
+            <div id="options"></div>
+        </section>
+    </div>
+
+    <script>
+        // Default initial data matching requested sample
+        const DEFAULT_DATA = {
+            household_id: "home1",
+            children: [
+                { name: "Chidi", age: 7, grade: "Primary 2", interests: ["cars", "football"] },
+                { name: "Amaka", age: 4, grade: "Nursery 2", interests: ["animals"] }
+            ],
+            language: "English",
+            reading_level_note: "Amaka can read but struggles a bit. Chidi can read properly so use words and sentence structure that fits his level and pushes him a bit",
+            rules: {
+                session_minutes: 15,
+                quiz_questions: 4,
+                avoid_topics: ["violence", "scary content"]
+            }
+        };
+
+        let currentHouseholdData = null;
+
+        // Render dynamic children rows
+        const childrenContainer = document.getElementById("children-container");
+        const btnAddChild = document.getElementById("btn-add-child");
+
+        function createChildCard(child = { name: "", age: "", grade: "", interests: [] }) {
+            const index = childrenContainer.children.length + 1;
+            const card = document.createElement("div");
+            card.className = "child-card";
+            card.innerHTML = `
+                <div class="child-card-header">
+                    <span>Child #${index}</span>
+                    <button type="button" class="btn-remove-child" title="Remove child">&times; Remove</button>
+                </div>
+                <div class="row-3">
+                    <div class="form-group" style="margin-bottom:8px">
+                        <label>Name</label>
+                        <input type="text" class="child-name" value="${child.name || ''}" placeholder="Name" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom:8px">
+                        <label>Age</label>
+                        <input type="number" class="child-age" min="1" max="18" value="${child.age ?? ''}" placeholder="Age" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom:8px">
+                        <label>Grade</label>
+                        <input type="text" class="child-grade" value="${child.grade || ''}" placeholder="e.g. Primary 2" required>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom:0">
+                    <label>Interests (Comma-separated)</label>
+                    <input type="text" class="child-interests" value="${Array.isArray(child.interests) ? child.interests.join(', ') : (child.interests || '')}" placeholder="e.g. cars, football">
+                </div>
+            `;
+
+            card.querySelector(".btn-remove-child").onclick = () => {
+                if (childrenContainer.children.length > 1) {
+                    card.remove();
+                    updateChildHeaders();
+                } else {
+                    alert("At least one child profile is required.");
+                }
+            };
+
+            childrenContainer.appendChild(card);
+        }
+
+        function updateChildHeaders() {
+            Array.from(childrenContainer.children).forEach((card, i) => {
+                const title = card.querySelector(".child-card-header span");
+                if (title) title.textContent = `Child #${i + 1}`;
+            });
+        }
+
+        btnAddChild.onclick = () => {
+            createChildCard();
+        };
+
+        // Populate form with data
+        function populateForm(data) {
+            document.getElementById("household_id").value = data.household_id || "";
+            document.getElementById("language").value = data.language || "English";
+            document.getElementById("reading_level_note").value = data.reading_level_note || "";
+            document.getElementById("session_minutes").value = data.rules?.session_minutes ?? 15;
+            document.getElementById("quiz_questions").value = data.rules?.quiz_questions ?? 4;
+            document.getElementById("avoid_topics").value = (data.rules?.avoid_topics || []).join(", ");
+
+            childrenContainer.innerHTML = "";
+            const children = data.children?.length ? data.children : [{ name: "", age: "", grade: "", interests: [] }];
+            children.forEach(c => createChildCard(c));
+        }
+
+        // Collect form data into required JSON format
+        function getFormData() {
+            const childCards = childrenContainer.querySelectorAll(".child-card");
+            const children = Array.from(childCards).map(card => {
+                const name = card.querySelector(".child-name").value.trim();
+                const age = parseInt(card.querySelector(".child-age").value.trim(), 10) || 0;
+                const grade = card.querySelector(".child-grade").value.trim();
+                const rawInterests = card.querySelector(".child-interests").value.trim();
+                const interests = rawInterests ? rawInterests.split(",").map(s => s.trim()).filter(Boolean) : [];
+                return { name, age, grade, interests };
+            });
+
+            const rawAvoid = document.getElementById("avoid_topics").value.trim();
+            const avoid_topics = rawAvoid ? rawAvoid.split(",").map(s => s.trim()).filter(Boolean) : [];
+
+            return {
+                household_id: document.getElementById("household_id").value.trim(),
+                children,
+                language: document.getElementById("language").value.trim(),
+                reading_level_note: document.getElementById("reading_level_note").value.trim(),
+                rules: {
+                    session_minutes: parseInt(document.getElementById("session_minutes").value.trim(), 10) || 15,
+                    quiz_questions: parseInt(document.getElementById("quiz_questions").value.trim(), 10) || 4,
+                    avoid_topics
+                }
+            };
+        }
+
+        function showChatScreen(data) {
+            currentHouseholdData = data;
+            document.getElementById("setup-section").style.display = "none";
+            document.getElementById("chat-section").style.display = "block";
+
+            // Update banner
+            document.getElementById("banner-household-id").textContent = `ID: ${data.household_id}`;
+            document.getElementById("banner-language").textContent = data.language;
+            const childSummary = (data.children || []).map(c => `${c.name} (${c.age})`).join(", ");
+            document.getElementById("banner-children").textContent = `Learners: ${childSummary}`;
+        }
+
+        function showSetupScreen() {
+            document.getElementById("setup-section").style.display = "block";
+            document.getElementById("chat-section").style.display = "none";
+        }
+
+        document.getElementById("btn-edit-setup").onclick = showSetupScreen;
+
+        // Form Submit Handler
+        document.getElementById("household-form").onsubmit = async (e) => {
+            e.preventDefault();
+            const payload = getFormData();
+
+            // Save in localStorage
+            localStorage.setItem("tutortots_household", JSON.stringify(payload));
+
+            // Optionally POST to server
+            try {
+                await fetch("/api/household", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+            } catch (err) {
+                console.warn("Could not sync with /api/household endpoint:", err);
+            }
+
+            showChatScreen(payload);
+        };
+
+        // Initialize Page
+        async function init() {
+            let existingData = null;
+
+            // Try loading from localStorage first
+            const localSaved = localStorage.getItem("tutortots_household");
+            if (localSaved) {
+                try { existingData = JSON.parse(localSaved); } catch {}
+            }
+
+            // Or load from server if not found locally
+            if (!existingData) {
+                try {
+                    const res = await fetch("/api/household");
+                    if (res.ok) {
+                        existingData = await res.json();
+                    }
+                } catch {}
+            }
+
+            // Fallback to DEFAULT_DATA
+            populateForm(existingData || DEFAULT_DATA);
+        }
+
+        init();
+
+        // ---------------- Chat & Speech Functionality ----------------
+        let isBusy = false;
+
+        function setControlsLocked(locked) {
+            document.getElementById('mic').disabled = locked;
+            document.getElementById('box').disabled = locked;
+            document.querySelector('#typed button').disabled = locked;
+            document.getElementById('mic').style.opacity = locked ? '0.45' : '1';
+        }
+
+        async function send(text) {
+            if (!text.trim()) return;
+            if (isBusy) return;
+
+            isBusy = true;
+            setControlsLocked(true);
+
+            document.getElementById('heard').textContent = text;
+            document.getElementById('out').textContent = "Thinking...";
+
+            let fullReply = '';
+            let firstChunk = true;
+
+            try {
+                const response = await fetch("api/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 
+                        text,
+                        household: currentHouseholdData 
+                    }),
+                });
+
+                if (!response.ok) throw new Error(`Server error ${response.status}`);
+                
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+                while(true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+
+                    buffer += decoder.decode(value, { stream: true});
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop() ?? '';
+                    
+                    for (const line of lines) {
+                        if (!line.startsWith('data: ')) continue;
+                        const event  = JSON.parse(line.slice(6));
+
+                        if (event.type === 'chunk') {
+                            fullReply += event.text;
+                            if (firstChunk) {
+                                document.getElementById("out").textContent = '';
+                                firstChunk = false;
+                            }
+                            document.getElementById("out").textContent = fullReply;
+                        } else if (event.type === 'done') {
+                            showOptions(event.question);
+                            speakReply(fullReply);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error(error.message);
+                document.getElementById("out").textContent = "Sorry, error reaching the tutor server. " + error.message;
+                isBusy = false;
+                setControlsLocked(false);
+            }
+        }
+
+        function speakReply(text) {
+            if (!('speechSynthesis' in window) || !text) {
+                isBusy = false;
+                setControlsLocked(false);
+                return;
+            }
+
+            speechSynthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.onend = () => { isBusy = false; setControlsLocked(false);};
+            utterance.onerror = () => { isBusy = false; setControlsLocked(false); };
+            utterance.rate = 0.9;
+            utterance.pitch = 1.1;
+
+            function pickVoice(){
+                const voices = speechSynthesis.getVoices();
+                if (voices.length === 0) return;
+                
+                const voice = voices.find(v => v.name.includes('Google UK English Female') && v.lang === 'en-GB')
+                    ?? voices.find(v => v.lang === 'en-US') ?? voices[0];
+                if (voice) utterance.voice = voice;
+                speechSynthesis.speak(utterance);
+            }
+            if (speechSynthesis.getVoices().length > 0) {
+                pickVoice();
+            } else {
+                speechSynthesis.onvoiceschanged = () => {
+                    speechSynthesis.onvoiceschanged = null;
+                    pickVoice();
+                }
+            }
+        }
+
+        document.getElementById("typed").onsubmit = (e) => {
+            e.preventDefault();
+            const box = document.getElementById('box');
+            send(box.value);
+            box.value = "";
+        };
+
+        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SR) {
+            const rec = new SR();
+            rec.lang = "en-US";
+            rec.onresult = (e) => send(e.results[0][0].transcript);
+            document.getElementById("mic").onclick = () => {
+                if (!isBusy) rec.start();
+            };
+        } else {
+            document.getElementById("mic").disabled = true;
+            document.getElementById("mic").title = "Speech recognition not supported in this browser";
+        }
+
+        function showOptions(q) {
+            const div = document.getElementById("options");
+            div.innerHTML = "";
+            (q?.options ?? []).forEach((o) => {
+                const button = document.createElement("button");
+                button.className = "option-btn";
+                button.textContent = o;
+                button.onclick = () => send(o.replace(/^[A-E]\.\s*/, ""));
+                div.appendChild(button);
+            });
+        }
+    </script>
+</body>
+</html>
