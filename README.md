@@ -151,4 +151,4 @@ When connected as an MCP tool provider, the following tools are exposed:
 
 ## 📜 License
 
-This project is licensed under the [ISC License](LICENSE).
+This project is licensed under the [MIT License](LICENSE).
