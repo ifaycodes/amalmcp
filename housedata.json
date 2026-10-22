@@ -1,0 +1,34 @@
+{
+  "household_id": "ugw",
+  "children": [
+    {
+      "name": "Henry",
+      "age": 7,
+      "grade": "Primary 2",
+      "interests": [
+        "cars",
+        "football",
+        "electronics"
+      ]
+    },
+    {
+      "name": "Kosara",
+      "age": 4,
+      "grade": "Nursery 2",
+      "interests": [
+        "animals",
+        "lego"
+      ]
+    }
+  ],
+  "language": "English",
+  "reading_level_note": "Kosara can read but struggles a bit. Chidi can read properly so use words and sentence structure that fits his level and pushes him a bit",
+  "rules": {
+    "session_minutes": 15,
+    "quiz_questions": 4,
+    "avoid_topics": [
+      "violence",
+      "scary content"
+    ]
+  }
+}
